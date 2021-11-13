@@ -8,7 +8,7 @@ public class logicBots {
 
     public static String BotResponse(String text) throws InterruptedException {
 
-        HashMap<String, String> questions = new HashMap<>();
+        /*HashMap<String, String> questions = new HashMap<>();
         questions.put("привет", "hello");
         questions.put("зравствуй", "hello");
         questions.put("добрый день", "hello");
@@ -36,6 +36,7 @@ public class logicBots {
             }
 
         }
+        */
         Calendar calendar = new GregorianCalendar();
         Date date = calendar.getTime();
         Thread.sleep(TimeUnit.SECONDS.toMillis(3));
