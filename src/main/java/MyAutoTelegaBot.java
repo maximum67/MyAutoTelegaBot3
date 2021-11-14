@@ -60,7 +60,7 @@ public class MyAutoTelegaBot extends TelegramLongPollingBot {
                 Thread thread = new MyThread("Thread " + update.getMessage().getChatId().toString(), usedChatId);
                 thread.start();
                 threadArrayList.add(thread);
-                System.out.println("Запущен поток "+ thread.getId());
+                //System.out.println("Запущен поток "+ thread.getId());
             } else {
                 message.setText("Я уже работаю, отчет будет доставлен вовремя. " +
                         "Если в этом нет необходимотси наберите: stop bot");
@@ -71,7 +71,7 @@ public class MyAutoTelegaBot extends TelegramLongPollingBot {
                 e.printStackTrace();
             }
         }
-        if (update.getMessage().getText().toLowerCase().equals("stop bot")){
+        if (update.getMessage().getText().toLowerCase().equals("stop bot")) {
             SendMessage message = new SendMessage();
             message.setChatId(update.getMessage().getChatId().toString());
             message.setText("Ну, пока. Не надо - значит не надо, я старался((");
@@ -82,12 +82,13 @@ public class MyAutoTelegaBot extends TelegramLongPollingBot {
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
-            for (Thread th: threadArrayList) {
-                System.out.println("Поток с номер ID "+th.getId()+" под именем "+th.getName()+ "удаляем");
+            for (Thread th : threadArrayList) {
+                //System.out.print("Поток с номер ID "+th.getId()+" под именем "+th.getName()+ " ");
+                //System.out.println(th.isAlive()? "Активенs": "Не авктивенs");
                 if (th.getName().equals("Thread " + update.getMessage().getChatId().toString())) {
                     threadArrayList.remove(th);
+                    // System.out.println("Поток с номер ID "+th.getId()+" под именем "+th.getName()+ " удаляем");
                     if (th.isAlive()) {
-                        System.out.println(th.isAlive()? "Активенs": "Не авктивенs");
                         th.stop();
                     }
                 }
@@ -106,28 +107,31 @@ public class MyAutoTelegaBot extends TelegramLongPollingBot {
             }
         }
 
-        if (update.getMessage().getText().equals("sending a report")){
+        if (update.getMessage().getText().equals("sending a report")) {
 
             try {
                 sendDocument(update.getMessage().getChatId().toString(),
                         "Файл отчета",
-                    getFile("notes3.txt"));
+                        getFile("notes3.txt"));
 
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
+
+            for (Thread th : threadArrayList) {
+                System.out.print("Поток с номер ID " + th.getId() + " под именем " + th.getName());
+                System.out.println(th.isAlive() ? "Активен" : "Не активен");
+                if (!th.isAlive()) {
+                    threadArrayList.remove(th);
+                }
+            }
             Thread thread = new MyThread("Thread " + update.getMessage().getChatId().toString(), usedChatId);
             thread.start();
             threadArrayList.add(thread);
-            for (Thread th: threadArrayList) {
-                System.out.println("Поток с номер ID "+th.getId()+" под именем "+th.getName());
-                System.out.println(th.isAlive()? "Активен1": "Не авктивен1");
-                th.stop();
-                System.out.println(th.isAlive()? "Активен2": "Не авктивен2");
-            }
         }
+   }
 
-    }
+
 
 
     public void sendDocument(String chatId, String caption, File sendFile) throws TelegramApiException {
