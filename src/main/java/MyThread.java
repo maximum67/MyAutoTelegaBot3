@@ -21,7 +21,7 @@ public class MyThread extends Thread {
         System.out.println(date.getTime()-(date.getTime()%86400000)+43200000);
         System.out.println((date.getTime()));
         try{
-            Thread.sleep(3600000);
+            Thread.sleep(20000);
         }
         catch(InterruptedException e){
             System.out.println("Thread has been interrupted");

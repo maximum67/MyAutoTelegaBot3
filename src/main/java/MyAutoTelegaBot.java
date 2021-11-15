@@ -38,7 +38,8 @@ public class MyAutoTelegaBot extends TelegramLongPollingBot {
      */
     @Override
     public void onUpdateReceived(Update update) {
-        long usedChatId = update.getMessage().getChatId();
+         usedChatId = update.getMessage().getChatId();
+         PathDocument pathDocument = new PathDocument();
         /*if (update.hasMessage() && update.getMessage().hasText()) {
             SendMessage message = new SendMessage(); // Создайте объект SendMessage с обязательными полями
             message.setChatId(update.getMessage().getChatId().toString());
@@ -83,7 +84,7 @@ public class MyAutoTelegaBot extends TelegramLongPollingBot {
             try {
                 sendDocument(update.getMessage().getChatId().toString(),
                         "Файл отчета",
-                        getFile("C:\\Users\\Gigalskiy\\Documents\\Авто-Питер2\\Prays 15.11.21.xls"));
+                        getFile(pathDocument.getPathDocument()));
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
