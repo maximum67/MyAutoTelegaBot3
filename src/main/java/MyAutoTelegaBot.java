@@ -6,6 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.io.File;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import static org.apache.commons.io.FileUtils.getFile;
@@ -39,8 +40,7 @@ public class MyAutoTelegaBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
          usedChatId = update.getMessage().getChatId();
-         PathDocument pathDocument = new PathDocument();
-        /*if (update.hasMessage() && update.getMessage().hasText()) {
+         /*if (update.hasMessage() && update.getMessage().hasText()) {
             SendMessage message = new SendMessage(); // Создайте объект SendMessage с обязательными полями
             message.setChatId(update.getMessage().getChatId().toString());
             message.setText("Передаем файл");
@@ -81,9 +81,15 @@ public class MyAutoTelegaBot extends TelegramLongPollingBot {
             }
         }
         if (update.getMessage().getText().equals("sending a report")) {
+            PathDocument pathDocument = new PathDocument();
+            LocalDate date = LocalDate.now().minusDays(1);
+            int dayOfMonth = date.getDayOfMonth();
+            int year = date.getYear();
+            int month = date.getMonthValue();
+            String dataFormat = String.format("Отчет за %d.%d.%d \n", dayOfMonth, month, year);
             try {
                 sendDocument(update.getMessage().getChatId().toString(),
-                        "Отчет за вчерашний день",
+                        dataFormat,
                         getFile(pathDocument.getPathDocument()));
             } catch (TelegramApiException e) {
                 e.printStackTrace();
