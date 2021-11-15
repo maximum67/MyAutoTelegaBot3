@@ -39,7 +39,7 @@ public class logicBots {
         */
         Calendar calendar = new GregorianCalendar();
         Date date = calendar.getTime();
-        Thread.sleep(TimeUnit.SECONDS.toMillis(3));
+        Thread.sleep(TimeUnit.SECONDS.toMillis(10));
         return "Затрудняюсь ответить, оставьте номер телефона "+ date;
     }
 
