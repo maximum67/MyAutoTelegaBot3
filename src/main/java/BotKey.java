@@ -4,9 +4,9 @@ import java.io.IOException;
 import static java.lang.String.valueOf;
 
 public class BotKey {
-    private String key="";
-    BotKey(){
-    }
+       private String key="";
+       BotKey(){
+       }
 
     public String getKey() {
         key ="";

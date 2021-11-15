@@ -14,8 +14,7 @@ public class MyAutoTelegaBot extends TelegramLongPollingBot {
 
     private Update update;
     private long usedChatId;
-    public static ArrayList <String> workChats = new ArrayList<String>();
-    public static ArrayList <Thread> threadArrayList = new ArrayList<Thread>();
+    public static ArrayList <String> workChats = new ArrayList<>();
 
     @Override
     public String getBotUsername(){
@@ -39,100 +38,60 @@ public class MyAutoTelegaBot extends TelegramLongPollingBot {
      */
     @Override
     public void onUpdateReceived(Update update) {
-        long usedChatId = update.getMessage().getChatId();
+         usedChatId = update.getMessage().getChatId();
+         PathDocument pathDocument = new PathDocument();
         /*if (update.hasMessage() && update.getMessage().hasText()) {
             SendMessage message = new SendMessage(); // Создайте объект SendMessage с обязательными полями
             message.setChatId(update.getMessage().getChatId().toString());
             message.setText("Передаем файл");
             try {
-                //execute(message); // Способ вызова для отправки сообщения
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+                execute(message); // Отправляем сообщение
+            } catch (TelegramApiException e) {e.printStackTrace();}
         }*/
-        if (update.getMessage().getText().toLowerCase().equals("start bot")) {
+        if (update.getMessage().getText().equalsIgnoreCase("start bot")) {
             SendMessage message = new SendMessage();
             message.setChatId(update.getMessage().getChatId().toString());
             message.setText("Я телеграм-бот, я ежедневно буду присылать вам отчёт. " +
                     "Если в этом нет необходимости наберите: stop bot");
-            if (!workChats.contains(update.getMessage().getChatId().toString())) {
+            //if (!workChats.contains(update.getMessage().getChatId().toString()))
+            if (workChats.size()==0) {
                 workChats.add(update.getMessage().getChatId().toString());
                 Thread thread = new MyThread("Thread " + update.getMessage().getChatId().toString(), usedChatId);
                 thread.start();
-                threadArrayList.add(thread);
-                //System.out.println("Запущен поток "+ thread.getId());
             } else {
-                message.setText("Я уже работаю, отчет будет доставлен вовремя. " +
-                        "Если в этом нет необходимотси наберите: stop bot");
+                message.setText("Я уже работаю.");
             }
             try {
-                execute(message); // Способ вызова для отправки сообщения
+                execute(message); // Отправляем сообщение
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
         }
-        if (update.getMessage().getText().toLowerCase().equals("stop bot")) {
-            SendMessage message = new SendMessage();
-            message.setChatId(update.getMessage().getChatId().toString());
-            message.setText("Ну, пока. Не надо - значит не надо, я старался((");
-            try {
-                execute(message); // Способ вызова для отправки сообщения
-                //System.exit(0);
-
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
-            for (Thread th : threadArrayList) {
-                //System.out.print("Поток с номер ID "+th.getId()+" под именем "+th.getName()+ " ");
-                //System.out.println(th.isAlive()? "Активенs": "Не авктивенs");
-                if (th.getName().equals("Thread " + update.getMessage().getChatId().toString())) {
-                    threadArrayList.remove(th);
-                    // System.out.println("Поток с номер ID "+th.getId()+" под именем "+th.getName()+ " удаляем");
-                    if (th.isAlive()) {
-                        th.stop();
-                    }
+        if (update.getMessage().getText().equalsIgnoreCase("stop bot")) {
+            if (workChats.contains(update.getMessage().getChatId().toString())) {
+                SendMessage message = new SendMessage();
+                message.setChatId(update.getMessage().getChatId().toString());
+                message.setText("Ну, пока. Я отключаюсь.");
+                try {
+                    execute(message); // Отправляем сообщение
+                    System.exit(0);
+                } catch (TelegramApiException e) {
+                    e.printStackTrace();
                 }
             }
         }
-        if (update.getMessage().getText().toLowerCase().equals("stop bot stop")) {
-            SendMessage message = new SendMessage();
-            message.setChatId(update.getMessage().getChatId().toString());
-            message.setText("Ну, пока. Не надо - значит не надо, я старался((");
-            try {
-                execute(message); // Способ вызова для отправки сообщения
-                System.exit(0);
-
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
-        }
-
         if (update.getMessage().getText().equals("sending a report")) {
-
             try {
                 sendDocument(update.getMessage().getChatId().toString(),
-                        "Файл отчета",
-                        getFile("notes3.txt"));
-
+                        "Отчет за вчерашний день",
+                        getFile(pathDocument.getPathDocument()));
             } catch (TelegramApiException e) {
                 e.printStackTrace();
-            }
-
-            for (Thread th : threadArrayList) {
-                System.out.print("Поток с номер ID " + th.getId() + " под именем " + th.getName());
-                System.out.println(th.isAlive() ? "Активен" : "Не активен");
-                if (!th.isAlive()) {
-                    threadArrayList.remove(th);
-                }
             }
             Thread thread = new MyThread("Thread " + update.getMessage().getChatId().toString(), usedChatId);
             thread.start();
-            threadArrayList.add(thread);
         }
-   }
-
-
-
+    }
 
     public void sendDocument(String chatId, String caption, File sendFile) throws TelegramApiException {
         SendDocument sendDocument = new SendDocument();
@@ -142,6 +101,4 @@ public class MyAutoTelegaBot extends TelegramLongPollingBot {
         execute(sendDocument);
 
     }
-
-
 }
