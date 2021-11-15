@@ -34,6 +34,7 @@ public class MyAutoTelegaBot extends TelegramLongPollingBot {
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
+
     }
 
     /**
@@ -46,7 +47,7 @@ public class MyAutoTelegaBot extends TelegramLongPollingBot {
         if (update.hasMessage() && update.getMessage().hasText()) {
             SendMessage message = new SendMessage(); // Создайте объект SendMessage с обязательными полями
             message.setChatId(update.getMessage().getChatId().toString());
-            message.setText(update.getMessage().getChatId().toString());
+            message.setText("ответ на сообщение");
 
             try {
                 execute(message); // Способ вызова для отправки сообщения
