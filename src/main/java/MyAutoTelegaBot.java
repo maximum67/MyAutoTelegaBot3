@@ -83,7 +83,7 @@ public class MyAutoTelegaBot extends TelegramLongPollingBot {
         if (update.getMessage().getText().equals("sending a report")) {
             try {
                 sendDocument(update.getMessage().getChatId().toString(),
-                        "Файл отчета",
+                        "Отчет за вчерашний день",
                         getFile(pathDocument.getPathDocument()));
             } catch (TelegramApiException e) {
                 e.printStackTrace();
