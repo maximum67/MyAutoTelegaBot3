@@ -1,8 +1,9 @@
+package autotelega;
+
+import autotelega.MyAutoTelegaBot;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-
-import java.util.Date;
 
 
 public class MyThread extends Thread {

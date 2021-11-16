@@ -1,3 +1,7 @@
+package autotelega;
+
+import autotelega.BotKey;
+import org.apache.commons.io.FileUtils;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -90,7 +94,7 @@ public class MyAutoTelegaBot extends TelegramLongPollingBot {
             try {
                 sendDocument(update.getMessage().getChatId().toString(),
                         dataFormat,
-                        getFile(pathDocument.getPathDocument()));
+                        FileUtils.getFile(pathDocument.getPathDocument()));
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
