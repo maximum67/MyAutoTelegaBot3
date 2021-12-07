@@ -19,14 +19,20 @@ public class MyThread extends Thread {
     public void run(){
         //System.out.printf("%s started... \n", Thread.currentThread().getName());
         //System.out.printf("%s started... \n", Thread.currentThread().getId());
-
+        long timesleep = 100000;
+        long timestart = 32700000; //09:05
         Date date = new Date();
-        System.out.println(date.getTime()-(date.getTime()%86400000)+43189200);
-        System.out.println(date.getTime()%86400000+10800000);
-        System.out.println((date.getTime()));
+        //System.out.println(date.getTime()%86400000);
+        if (date.getTime() % 86400000+10800000 < timestart) {
+            timesleep = timestart - (date.getTime() % 86400000 + 10800000);
+        }else {
+            timesleep = 86400000 - (date.getTime() % 86400000 + 10800000) + timestart;
+        }
+        //System.out.println(timesleep);
+        //System.out.println((date.getTime()));
 
         try{
-            Thread.sleep(10000);
+            Thread.sleep(timesleep);
         }
         catch(InterruptedException e){
             System.out.println("Thread has been interrupted");
