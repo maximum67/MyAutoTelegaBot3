@@ -1,6 +1,5 @@
 package autotelega;
 
-import autotelega.BotKey;
 import org.apache.commons.io.FileUtils;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
@@ -13,13 +12,12 @@ import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import static org.apache.commons.io.FileUtils.getFile;
-
 public class MyAutoTelegaBot extends TelegramLongPollingBot {
 
     private Update update;
     private long usedChatId;
     public static ArrayList <String> workChats = new ArrayList<>();
+    private MyThread thread = new MyThread();
 
     @Override
     public String getBotUsername(){
@@ -44,7 +42,7 @@ public class MyAutoTelegaBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
          usedChatId = update.getMessage().getChatId();
-         /*if (update.hasMessage() && update.getMessage().hasText()) {
+        /*if (update.hasMessage() && update.getMessage().hasText()) {
             SendMessage message = new SendMessage(); // Создайте объект SendMessage с обязательными полями
             message.setChatId(update.getMessage().getChatId().toString());
             message.setText("Передаем файл");
@@ -60,9 +58,15 @@ public class MyAutoTelegaBot extends TelegramLongPollingBot {
             //if (!workChats.contains(update.getMessage().getChatId().toString()))
             if (workChats.size()==0) {
                 workChats.add(update.getMessage().getChatId().toString());
-                Thread thread = new MyThread("Thread " + update.getMessage().getChatId().toString(), usedChatId);
-                thread.start();
-            } else {
+                thread.setName("Thread " + update.getMessage().getChatId().toString());
+                thread.setUsedChatId(usedChatId);
+                if (thread.isInterrupted()) {
+                 thread = new MyThread("Thread " + update.getMessage().getChatId().toString(), usedChatId);
+                 thread.start();
+                }else {
+                 thread.start();
+                }
+                } else {
                 message.setText("Я уже работаю.");
             }
             try {
@@ -77,8 +81,12 @@ public class MyAutoTelegaBot extends TelegramLongPollingBot {
                 message.setChatId(update.getMessage().getChatId().toString());
                 message.setText("Ну, пока. Я отключаюсь.");
                 try {
-                    execute(message); // Отправляем сообщение
-                    System.exit(0);
+                    execute(message);// Отправляем сообщение
+                    if (thread.isAlive()) {
+                        thread.stopThread();
+                        workChats.clear();
+                    }
+                    //System.exit(0);
                 } catch (TelegramApiException e) {
                     e.printStackTrace();
                 }
@@ -98,8 +106,6 @@ public class MyAutoTelegaBot extends TelegramLongPollingBot {
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
-            Thread thread = new MyThread("Thread " + update.getMessage().getChatId().toString(), usedChatId);
-            thread.start();
         }
     }
 
