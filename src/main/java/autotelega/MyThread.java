@@ -47,7 +47,7 @@ public class MyThread extends Thread {
             try {
                 Thread.sleep(15000);
             } catch (InterruptedException e) {
-                System.out.println("Thread has been interrupted");
+               // System.out.println("Thread has been interrupted");
                 this.interrupt();
                 return;
             }
